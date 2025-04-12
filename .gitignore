@@ -3,7 +3,7 @@ backend/node_modules/
 # frontend/node_modules/
 
 # Environment variables
-backend/config/.env
+backend/src/config/.env
 # frontend/.env
 
 # Build artifacts
