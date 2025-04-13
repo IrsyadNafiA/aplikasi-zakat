@@ -9,4 +9,14 @@ const getUsers = async (req, res) => {
   }
 };
 
-export { getUsers };
+const getUserById = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const user = await prisma.user.findUnique({ where: id });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export { getUsers, getUserById };

@@ -15,11 +15,13 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  nama      String
-  email     String   @unique
-  password  String
-  no_hp     String
-  alamat    String
-  createdAt DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  nama         String
+  email        String   @unique
+  password     String
+  no_hp        String
+  alamat       String
+  isAdmin      Int
+  refreshToken String? //bisa null
+  createdAt    DateTime @default(now())
 }
