@@ -21,7 +21,102 @@ model User {
   password     String
   no_hp        String
   alamat       String
+  rw           Int
+  rt           Int
   isAdmin      Int
   refreshToken String? //bisa null
   createdAt    DateTime @default(now())
+
+  Keluarga Keluarga[]
+}
+
+model Keluarga {
+  id Int @id @default(autoincrement())
+
+  muzaki       User   @relation(fields: [muzaki_email], references: [email])
+  muzaki_email String
+
+  nama      String
+  hubungan  String
+  createdAt DateTime @default(now())
+
+  Zakat_uang Zakat_uang[]
+}
+
+model Remark {
+  id Int @id @default(autoincrement())
+
+  muzaki   String
+  penerima String
+
+  status    Status   @default(DIAJUKAN)
+  tanggal   DateTime
+  createdAt DateTime @default(now())
+
+  Zakat_uang    Zakat_uang[]
+  Zakat_makanan Zakat_makanan[]
+  Fidyah        Fidyah[]
+  Infaq         Infaq[]
+}
+
+model Zakat_uang {
+  id Int @id @default(autoincrement())
+
+  remark    Remark @relation(fields: [remark_id], references: [id])
+  remark_id Int
+
+  keluarga    Keluarga @relation(fields: [keluarga_id], references: [id])
+  keluarga_id Int
+
+  nisab     Float
+  harga     BigInt
+  jumlah    BigInt
+  createdAt DateTime @default(now())
+}
+
+model Zakat_makanan {
+  id Int @id @default(autoincrement())
+
+  remark    Remark @relation(fields: [remark_id], references: [id])
+  remark_id Int
+
+  tipe            Tipe?
+  jumlah_keluarga Int
+  nisab           Float
+  jumlah          Float
+  createdAt       DateTime @default(now())
+}
+
+model Fidyah {
+  id Int @id @default(autoincrement())
+
+  remark    Remark @relation(fields: [remark_id], references: [id])
+  remark_id Int
+
+  nisab     Int
+  harga     BigInt
+  jumlah    BigInt
+  createdAt DateTime @default(now())
+}
+
+model Infaq {
+  id Int @id @default(autoincrement())
+
+  remark    Remark @relation(fields: [remark_id], references: [id])
+  remark_id Int
+
+  jumlah    BigInt
+  createdAt DateTime @default(now())
+}
+
+// ENUM
+enum Status {
+  DIAJUKAN
+  SELESAI
+  TIDAK_SELESAI
+}
+
+enum Tipe {
+  BERAS
+  GANDUM
 }

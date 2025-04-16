@@ -1,3 +1,4 @@
+import response from "../utils/response.js";
 import prisma from "../config/prisma.js";
 import { comparePassword, hashPassword } from "../utils/hash.js";
 import {
@@ -5,10 +6,45 @@ import {
   signRefreshToken,
   verifyRefreshToken,
 } from "../utils/jwt.js";
+import { registerSchema } from "../utils/validations/authValidation.js";
 
-// const register = async (req, res) => {
-//     const { }
-// }
+const register = async (req, res) => {
+  try {
+    // Zod Validation Input
+    const parsed = registerSchema.parse(req.body);
+
+    // Check Existing User
+    const existing = await prisma.user.findUnique({
+      where: { email: parsed.email },
+    });
+    if (existing) return response(400, null, "User already exists", res);
+
+    // Hash Password
+    const hashedPassword = hashPassword(parsed.password);
+
+    // Save user to Database
+    const user = await prisma.user.create({
+      data: {
+        nama: parsed.nama,
+        email: parsed.email,
+        password: hashedPassword,
+        no_hp: parsed.no_hp,
+        alamat: parsed.alamat,
+        rw: parsed.rw,
+        rt: parsed.rt,
+        isAdmin: parsed.isAdmin,
+      },
+    });
+
+    response(201, user, "User created successfully", res);
+  } catch (error) {
+    if (error.name === "ZodError") {
+      return response(400, null, error.message, res);
+    }
+
+    response(500, null, error.message, res);
+  }
+};
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -58,4 +94,4 @@ const logout = async (req, res) => {
   res.json({ massage: "Logout successfully" });
 };
 
-export { login, refresh, logout };
+export { register, login, refresh, logout };
