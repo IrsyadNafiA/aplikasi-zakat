@@ -28,13 +28,14 @@ model User {
   createdAt    DateTime @default(now())
 
   Keluarga Keluarga[]
+  Remark   Remark[]
 }
 
 model Keluarga {
   id Int @id @default(autoincrement())
 
-  muzaki       User   @relation(fields: [muzaki_email], references: [email])
-  muzaki_email String
+  muzaki_id Int
+  muzaki    User @relation(fields: [muzaki_id], references: [id])
 
   nama      String
   hubungan  String
@@ -46,7 +47,9 @@ model Keluarga {
 model Remark {
   id Int @id @default(autoincrement())
 
-  muzaki   String
+  muzaki_id Int
+  muzaki    User @relation(fields: [muzaki_id], references: [id])
+
   penerima String
 
   status    Status   @default(DIAJUKAN)
