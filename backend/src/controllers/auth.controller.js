@@ -6,7 +6,10 @@ import {
   signRefreshToken,
   verifyRefreshToken,
 } from "../utils/jwt.js";
-import { registerSchema } from "../utils/validations/authValidation.js";
+import {
+  loginSchema,
+  registerSchema,
+} from "../utils/validations/authValidation.js";
 
 const register = async (req, res) => {
   try {
@@ -47,41 +50,55 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await prisma.user({ where: { email } });
+  try {
+    const parsed = loginSchema.parse(req.body);
+    const user = await prisma.user.findUnique({
+      where: { email: parsed.email },
+    });
 
-  if (!user || !comparePassword(password, user.password)) {
-    res.status(401).json({ error: "Invalid credentials" });
+    if (!user || !comparePassword(parsed.password, user.password)) {
+      return response(401, null, "Invalid credentials", res);
+    }
+
+    const accesToken = signAccessToken({ id: user.id, email: user.email });
+    const refreshToken = signRefreshToken({ id: user.id });
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { refreshToken },
+    });
+
+    response(200, { accesToken, refreshToken }, "Login successfully", res);
+  } catch (error) {
+    if (error.name === "ZodError") {
+      return response(400, null, error.message, res);
+    }
+
+    response(500, null, error.message, res);
   }
-
-  const accesToken = signAccessToken({ id: user.id, email: user.email });
-  const refreshToken = signRefreshToken({ id: user.id });
-
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { refreshToken },
-  });
-
-  res.json({ accesToken, refreshToken });
 };
 
 const refresh = async (req, res) => {
   const { refreshToken } = req.body;
-  if (!refreshToken)
-    return res.status(401).json({ error: "Missing refresh token" });
+  if (!refreshToken) return response(401, null, "Missing refresh token", res);
 
   try {
     const payload = verifyRefreshToken(refreshToken);
     const user = await prisma.user.findUnique({ where: { id: payload.id } });
 
     if (!user || user.refreshToken !== refreshToken) {
-      return res.status(403).json({ error: "Invalid refresh token" });
+      return response(403, null, "Invalid refresh token", res);
     }
 
     const newAccessToken = signAccessToken({ id: user.id, email: user.email });
-    res.json({ accesToken: newAccessToken });
+    response(
+      200,
+      { accessToken: newAccessToken },
+      "Refresh token successfully",
+      res
+    );
   } catch (error) {
-    res.status(403).json({ error: "Invalid token" });
+    response(403, null, error.message, res);
   }
 };
 
