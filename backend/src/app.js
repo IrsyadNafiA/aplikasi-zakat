@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 // Routes
 import userRoutes from "./routes/user.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import zakatRoutes from "./routes/zakat.routes.js";
 
 configDotenv();
 const app = express();
@@ -27,5 +28,6 @@ app.get("/", (req, res) => {
 // Routing
 app.use(userRoutes);
 app.use(authRoutes);
+app.use(zakatRoutes);
 
 export default app;
