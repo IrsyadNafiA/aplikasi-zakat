@@ -1,8 +1,15 @@
 import prisma from "../config/prisma.js";
+import {
+  getRemarks,
+  getRemarksById,
+} from "../repositories/zakat.repository.js";
 import { generateKeluargaCode } from "../utils/generate.js";
 import { isObjectEmpty } from "../utils/isObjectEmpty.js";
 import response from "../utils/response.js";
-import { remarksSchema } from "../utils/validations/remarksValidation.js";
+import {
+  remarksSchema,
+  updateRemarksSchema,
+} from "../utils/validations/remarksValidation.js";
 import {
   updateZakatMakananSchema,
   zakatMakananSchema,
@@ -158,19 +165,24 @@ const updateZakat = async (req, res) => {
 
 const updateRemarkStatus = async (req, res) => {
   try {
-    const parsed = remarksSchema.parse(req.body);
+    const parsed = updateRemarksSchema.parse(req.body);
 
     const remark = await prisma.remark.findUnique({
       where: { id: parsed.id },
     });
     if (!remark) return response(404, null, "Remark not found", res);
 
+    const updateData = {
+      status: parsed.status,
+      tanggal_dikonfirmasi: parsed.tanggal_dikonfirmasi,
+    };
+
     await prisma.remark.update({
       where: { id: parsed.id },
-      data: { status: parsed.status },
+      data: updateData,
     });
 
-    response(200, remark, "Remark updated successfully", res);
+    response(200, updateData, "Remark updated successfully", res);
   } catch (error) {
     if (error.name === "ZodError") {
       return response(400, null, error.message, res);
@@ -199,4 +211,45 @@ const deleteZakat = async (req, res) => {
   }
 };
 
-export { createZakat, updateZakat, updateRemarkStatus, deleteZakat };
+const deleteRemark = async (req, res) => {
+  try {
+    const { id, isDeleted } = req.body;
+    await prisma.remark.update({
+      where: { id },
+      data: { isDeleted },
+    });
+    response(200, id, "Data deleted successfully", res);
+  } catch (error) {
+    response(500, null, error.message, res);
+  }
+};
+
+// GET
+const getAllRemarks = async (req, res) => {
+  try {
+    const remarks = await getRemarks();
+    return response(200, remarks, "Data fetched successfully", res);
+  } catch (error) {
+    return response(500, null, error.message, res);
+  }
+};
+
+const getMyRemarks = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const remarks = await getRemarksById(id);
+    return response(200, remarks, "Data fetched successfully", res);
+  } catch (error) {
+    return response(500, null, error.message, res);
+  }
+};
+
+export {
+  createZakat,
+  updateZakat,
+  updateRemarkStatus,
+  deleteZakat,
+  deleteRemark,
+  getAllRemarks,
+  getMyRemarks,
+};
