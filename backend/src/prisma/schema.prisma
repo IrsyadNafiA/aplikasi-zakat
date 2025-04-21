@@ -42,6 +42,7 @@ model Remark {
   tanggal_diajukan     DateTime
   tanggal_dikonfirmasi DateTime?
   status               Status    @default(DIAJUKAN)
+  isDeleted            Int?
   createdAt            DateTime  @default(now())
 
   Zakat_uang    Zakat_uang[]
