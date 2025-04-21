@@ -60,7 +60,11 @@ const login = async (req, res) => {
       return response(401, null, "Invalid credentials", res);
     }
 
-    const accesToken = signAccessToken({ id: user.id, email: user.email });
+    const accesToken = signAccessToken({
+      id: user.id,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
     const refreshToken = signRefreshToken({ id: user.id });
 
     await prisma.user.update({
@@ -103,7 +107,7 @@ const refresh = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.user;
   await prisma.user.update({
     where: { id },
     data: { refreshToken: null },
