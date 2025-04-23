@@ -2,7 +2,6 @@ import {
   AppBar,
   Box,
   Button,
-  CssBaseline,
   Divider,
   Drawer,
   IconButton,
@@ -50,7 +49,6 @@ const Home = (props) => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
       <AppBar
         component="nav"
         sx={{
@@ -112,7 +110,7 @@ const Home = (props) => {
           {drawer}
         </Drawer>
       </nav>
-      <Box component="main" sx={{ p: 3 }} bgcolor={""}>
+      <Box component="main" sx={{ p: 3 }} bgcolor={"background.default"}>
         <Toolbar />
         <Typography>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique

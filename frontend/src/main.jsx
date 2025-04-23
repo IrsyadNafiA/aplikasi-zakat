@@ -7,9 +7,14 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import theme from "./utils/theme.js";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={App} />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <RouterProvider router={App} />
+    </ThemeProvider>
   </StrictMode>
 );
