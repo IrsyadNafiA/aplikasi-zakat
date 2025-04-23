@@ -1,4 +1,3 @@
-import "./App.css";
 import { createBrowserRouter } from "react-router";
 import Home from "./pages/home/Home.jsx";
 import Login from "./pages/auth/Login.jsx";

@@ -1,19 +1,40 @@
+import { Button } from "@mui/material";
 import { AppProvider, SignInPage } from "@toolpad/core";
 
-const providers = [{ id: "nodemailer", name: "Email" }];
+const providers = [{ id: "credentials", name: "Email and Password" }];
 
-const signIn = async (provider) => {
+const signIn = async (provider, formData) => {
   const promise = new Promise((resolve) => {
     setTimeout(() => {
-      console.log(`Sign in with ${provider.id}`);
+      const email = formData?.get("email");
+      const password = formData?.get("password");
+      alert(
+        `Signing in with "${provider.name}" and credentials: ${email}, ${password}`
+      );
       // preview-start
       resolve({
-        success: "Check your email for a verification link.",
+        type: "CredentialsSignin",
+        error: "Invalid credentials.",
       });
       // preview-end
-    }, 500);
+    }, 300);
   });
   return promise;
+};
+
+const customButton = () => {
+  return (
+    <Button
+      type="submit"
+      variant="outlined"
+      color="info"
+      size="medium"
+      disableElevation
+      fullWidth
+    >
+      Log In
+    </Button>
+  );
 };
 
 const Login = () => {
@@ -24,8 +45,11 @@ const Login = () => {
         signIn={signIn}
         providers={providers}
         slotProps={{
-          emailField: { autoFocus: false },
-          form: { noValidate: true },
+          emailField: { variant: "standard", autoFocus: false },
+          passwordField: { variant: "standard" },
+        }}
+        slots={{
+          submitButton: customButton,
         }}
       />
     </AppProvider>
