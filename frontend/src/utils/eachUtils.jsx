@@ -1,5 +1,8 @@
 import { Children } from "react";
 
-export const EachUtils = ({ of, render }) => {
+const EachUtils = ({ of, render }) => {
+  if (!Array.isArray(of)) return null;
   return Children.toArray(of.map((item, index) => render(item, index)));
 };
+
+export default EachUtils;

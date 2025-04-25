@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
@@ -9,12 +9,15 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./utils/theme.js";
+import LoadingPage from "./components/LoadingPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <RouterProvider router={App} />
-    </ThemeProvider>
+    <Suspense fallback={<LoadingPage />}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <RouterProvider router={App} />
+      </ThemeProvider>
+    </Suspense>
   </StrictMode>
 );

@@ -2,11 +2,7 @@ import { Box, Button, Grid, Link, Typography } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../../utils/schema/authSchema";
-import {
-  RHFPasswordField,
-  RHFSelectField,
-  RHFTextField,
-} from "../../components/FormControl";
+import { RHFPasswordField, RHFTextField } from "../../components/FormControl";
 
 // Icon
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
@@ -14,25 +10,6 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import PasswordIcon from "@mui/icons-material/Password";
 import PhoneIcon from "@mui/icons-material/Phone";
 import HomeIcon from "@mui/icons-material/Home";
-
-const options = [
-  {
-    value: "1",
-    label: "1",
-  },
-  {
-    value: "2",
-    label: "2",
-  },
-  {
-    value: "3",
-    label: "3",
-  },
-  {
-    value: "4",
-    label: "4",
-  },
-];
 
 const Register = () => {
   const methods = useForm({
@@ -161,8 +138,6 @@ const Register = () => {
             </Grid>
           </Grid>
           {/* RT & RW Section - End */}
-
-          <RHFSelectField label="RW" name="rw" options={options} />
 
           <Button variant="contained" color="primary" type="submit">
             Buat Akun

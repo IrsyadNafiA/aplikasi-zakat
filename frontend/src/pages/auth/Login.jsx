@@ -14,6 +14,7 @@ const Login = () => {
   const onSubmit = (data) => {
     console.log(data);
     alert("Login Berhasil");
+    window.location.href = "/dashboard";
   };
 
   return (

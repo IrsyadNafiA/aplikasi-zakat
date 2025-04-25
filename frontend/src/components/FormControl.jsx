@@ -11,8 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { useFormContext } from "react-hook-form";
-import { EachUtils } from "../utils/eachUtils";
+import { Controller, useFormContext } from "react-hook-form";
+import EachUtils from "../utils/eachUtils";
 
 const RHFTextField = ({ name, label, type = "text", ...props }) => {
   const {
@@ -89,40 +89,37 @@ const RHFPasswordField = ({ name, label, ...props }) => {
 };
 
 const RHFSelectField = ({ name, label, options, ...props }) => {
-  const [value, setValue] = useState("");
   const {
-    register,
+    control,
     formState: { errors },
   } = useFormContext();
 
   const error = errors[name];
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-
   return (
-    <FormControl
-      variant="standard"
-      sx={{ m: 1, minWidth: 120 }}
-      error={!!error}
-    >
-      <InputLabel id={name}>{label}</InputLabel>
-      <Select
-        labelId={name}
-        id={name}
-        value={value}
-        {...register(name)}
-        onChange={handleChange}
-        {...props}
-      >
-        <EachUtils
-          of={options}
-          render={(item) => (
-            <MenuItem value={item.value}>{item.label}</MenuItem>
-          )}
-        />
-      </Select>
+    <FormControl variant="standard" fullWidth error={!!error}>
+      <InputLabel id={`${name}-label`}>{label}</InputLabel>
+
+      <Controller
+        name={name}
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <Select
+            labelId={`${name}-label`}
+            id={name}
+            label={label}
+            {...field}
+            {...props}
+          >
+            {options.map((item, index) => (
+              <MenuItem key={index} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+      />
       {error && (
         <Typography variant="caption" color="error">
           {error.message}

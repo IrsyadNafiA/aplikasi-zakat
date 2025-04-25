@@ -1,8 +1,20 @@
+import { lazy } from "react";
 import { createBrowserRouter } from "react-router";
-import Home from "./pages/home/Home.jsx";
+
+// Lazy loaded pages
+const Home = lazy(() => import("./pages/home/Home.jsx"));
+const AuthLayout = lazy(() => import("./pages/auth/AuthLayout.jsx"));
+const DashboardLayout = lazy(() =>
+  import("./pages/dashboard/DashboardLayout.jsx")
+);
+
+// Pages
 import Login from "./pages/auth/Login.jsx";
-import AuthLayout from "./pages/auth/AuthLayout.jsx";
 import Register from "./pages/auth/Register.jsx";
+import Logout from "./pages/auth/Logout.jsx";
+import Dashboard from "./pages/dashboard/Dashboard.jsx";
+import BayarZakat from "./pages/zakat/BayarZakat.jsx";
+import ListZakat from "./pages/zakat/ListZakat.jsx";
 
 const App = createBrowserRouter([
   {
@@ -20,6 +32,34 @@ const App = createBrowserRouter([
       {
         path: "register",
         Component: Register,
+      },
+      {
+        path: "logout",
+        Component: Logout,
+      },
+    ],
+  },
+  {
+    path: "dashboard",
+    Component: DashboardLayout,
+    children: [
+      {
+        path: "",
+        Component: Dashboard,
+      },
+    ],
+  },
+  {
+    path: "zakat",
+    Component: DashboardLayout,
+    children: [
+      {
+        path: "bayar-zakat",
+        Component: BayarZakat,
+      },
+      {
+        path: "list-zakat",
+        Component: ListZakat,
       },
     ],
   },
