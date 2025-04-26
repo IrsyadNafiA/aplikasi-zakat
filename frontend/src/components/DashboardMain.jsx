@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 
-const drawerWidth = 240;
+// const drawerWidth = 240;
 
 const DashboardMain = styled("main", {
   shouldForwardProp: (prop) => prop !== "open",
@@ -11,7 +11,7 @@ const DashboardMain = styled("main", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  marginLeft: `-${drawerWidth}px`,
+  // marginLeft: `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,

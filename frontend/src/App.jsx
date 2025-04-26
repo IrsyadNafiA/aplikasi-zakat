@@ -15,6 +15,7 @@ import Logout from "./pages/auth/Logout.jsx";
 import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import BayarZakat from "./pages/zakat/BayarZakat.jsx";
 import ListZakat from "./pages/zakat/ListZakat.jsx";
+import ZakatSaya from "./pages/zakat/ZakatSaya.jsx";
 
 const App = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const App = createBrowserRouter([
     path: "zakat",
     Component: DashboardLayout,
     children: [
+      {
+        path: "zakat-Saya",
+        Component: ZakatSaya,
+      },
       {
         path: "bayar-zakat",
         Component: BayarZakat,

@@ -5,7 +5,6 @@ const BayarZakat = () => {
   return (
     <div>
       <Typography variant="h5">Bayar Zakat</Typography>
-      <DataTable />
     </div>
   );
 };

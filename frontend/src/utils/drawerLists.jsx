@@ -20,8 +20,8 @@ const lists = [
     icon: <VolunteerActivismIcon />,
     children: [
       {
-        link: "/zakat/bayar-zakat",
-        title: "Bayar Zakat",
+        link: "/zakat/zakat-saya",
+        title: "Zakat Saya",
         icon: <VolunteerActivismIcon />,
       },
       {
