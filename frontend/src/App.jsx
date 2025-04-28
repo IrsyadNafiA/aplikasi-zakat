@@ -16,6 +16,7 @@ import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import BayarZakat from "./pages/zakat/BayarZakat.jsx";
 import ListZakat from "./pages/zakat/ListZakat.jsx";
 import ZakatSaya from "./pages/zakat/ZakatSaya.jsx";
+import ProfilSaya from "./pages/profilSaya/ProfilSaya.jsx";
 
 const App = createBrowserRouter([
   {
@@ -65,6 +66,16 @@ const App = createBrowserRouter([
       {
         path: "list-zakat",
         Component: ListZakat,
+      },
+    ],
+  },
+  {
+    path: "profil-saya",
+    Component: DashboardLayout,
+    children: [
+      {
+        path: "",
+        Component: ProfilSaya,
       },
     ],
   },

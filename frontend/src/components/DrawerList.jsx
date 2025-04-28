@@ -18,11 +18,40 @@ import useAuthStore from "../utils/store/useAuthStore";
 import { useNavigate } from "react-router";
 import useNotificationStore from "../utils/store/useNotificationStore";
 
+const filterMenu = (menus, isAdmin) => {
+  return menus
+    .map((item) => {
+      // jika ada children pada menu
+      if (item.children) {
+        const filteredChildren = filterMenu(item.children, isAdmin);
+        return { ...item, children: filteredChildren };
+      }
+
+      return item;
+    })
+    .filter((item) => {
+      if (item.isAdmin && !isAdmin) {
+        return false; //bukan admin
+      }
+      return true; //adalah admin
+    });
+};
+
 const DrawerList = () => {
   const [openNested, setOpenNested] = useState(null);
   const { logout } = useAuthStore();
   const { showNotification } = useNotificationStore();
+  const { user, getProfile } = useAuthStore();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      getProfile();
+    }
+  }, [getProfile, user]);
+
+  // filter drawer lists based on user isAdmin
+  const filteredLists = filterMenu(lists, user?.isAdmin);
 
   // Check if path is active
   const isActive = (path) => location.pathname.startsWith(path);
@@ -69,7 +98,7 @@ const DrawerList = () => {
       }}
       component="nav"
     >
-      {lists.map((item, idx) => {
+      {filteredLists.map((item, idx) => {
         // Handle Subheader
         if (item.kind === "subHeader") {
           return (

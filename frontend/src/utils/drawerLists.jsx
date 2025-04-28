@@ -28,24 +28,21 @@ const lists = [
         link: "/zakat/list-zakat",
         title: "List Zakat",
         icon: <ListIcon />,
-        isAdmin: true,
+        isAdmin: 1,
       },
     ],
   },
-  // {
-  //   kind: "subHeader",
-  //   title: "User Menu",
-  // },
-  // {
-  //   link: "/profil-saya",
-  //   title: "Profil Saya",
-  //   icon: <AccountCircleIcon />,
-  // },
-  // {
-  //   link: "/auth/logout",
-  //   title: "Log Out",
-  //   icon: <LogoutIcon />,
-  // },
+  {
+    kind: "subHeader",
+    title: "User Menu",
+    isAdmin: 1,
+  },
+  {
+    link: "/list-pengguna",
+    title: "List Pengguna",
+    icon: <AccountCircleIcon />,
+    isAdmin: 1,
+  },
 ];
 
 export default lists;
