@@ -16,10 +16,12 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import useAuthStore from "../utils/store/useAuthStore";
 import { useNavigate } from "react-router";
+import useNotificationStore from "../utils/store/useNotificationStore";
 
 const DrawerList = () => {
   const [openNested, setOpenNested] = useState(null);
   const { logout } = useAuthStore();
+  const { showNotification } = useNotificationStore();
   const navigate = useNavigate();
 
   // Check if path is active
@@ -48,8 +50,13 @@ const DrawerList = () => {
   };
 
   const handleLogout = async () => {
-    navigate("/auth/login");
-    await logout();
+    try {
+      await logout();
+      navigate("/auth/login");
+    } catch (error) {
+      console.error("Logout gagal:", error);
+      showNotification("Gagal logout, coba lagi!", "error");
+    }
   };
 
   return (

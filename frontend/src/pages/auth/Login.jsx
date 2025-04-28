@@ -16,21 +16,26 @@ const Login = () => {
   });
 
   // USE STORE
-  const { login, error, loading } = useAuthStore();
+  const { login, loading } = useAuthStore();
   const { showNotification } = useNotificationStore();
 
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
-      if (!error) {
-        showNotification("Login Berhasil", "success");
-        navigate("/dashboard");
+
+      const currentError = useAuthStore.getState().error; // Ambil error TERBARU setelah login
+
+      if (!currentError) {
+        showNotification("Login berhasil", "success");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1500);
       } else {
-        showNotification("Login Gagal", "error");
+        showNotification(currentError, "error");
       }
-    } catch (error) {
-      showNotification("Login Gagal", "error");
-      alert(error.response?.data?.message || "Login gagal");
+    } catch (e) {
+      console.error(e);
+      showNotification("Terjadi kesalahan saat login", "error");
     }
   };
 
