@@ -42,7 +42,7 @@ const getRemarks = async () => {
 
     return formattedRemarks;
   } catch (error) {
-    response(500, null, error.message, res);
+    throw new Error(error.message);
   }
 };
 
@@ -88,7 +88,7 @@ const getRemarksById = async (id) => {
 
     return formattedRemarks;
   } catch (error) {
-    response(500, null, error.message, res);
+    throw new Error(error.message);
   }
 };
 
