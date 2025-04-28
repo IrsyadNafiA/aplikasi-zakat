@@ -60,7 +60,7 @@ const login = async (req, res) => {
       return response(401, null, "Invalid credentials", res);
     }
 
-    const accesToken = signAccessToken({
+    const accessToken = signAccessToken({
       id: user.id,
       email: user.email,
       isAdmin: user.isAdmin,
@@ -72,7 +72,7 @@ const login = async (req, res) => {
       data: { refreshToken },
     });
 
-    response(200, { accesToken, refreshToken }, "Login successfully", res);
+    response(200, { accessToken, refreshToken }, "Login successfully", res);
   } catch (error) {
     if (error.name === "ZodError") {
       return response(400, null, error.message, res);
@@ -115,4 +115,28 @@ const logout = async (req, res) => {
   res.json({ massage: "Logout successfully" });
 };
 
-export { register, login, refresh, logout };
+const authMe = async (req, res) => {
+  const { id } = req.user;
+  try {
+    const user = await prisma.user.findUnique({ where: { id: Number(id) } });
+
+    if (!user) return response(404, null, "User not found", res);
+
+    const userData = {
+      id: user.id,
+      email: user.email,
+      nama: user.nama,
+      no_hp: user.no_hp,
+      alamat: user.alamat,
+      rw: user.rw,
+      rt: user.rt,
+      isAdmin: user.isAdmin,
+    };
+
+    response(200, userData, "User found successfully", res);
+  } catch (error) {
+    response(500, null, error.message, res);
+  }
+};
+
+export { register, login, refresh, logout, authMe };
