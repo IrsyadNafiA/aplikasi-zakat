@@ -10,19 +10,37 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import PasswordIcon from "@mui/icons-material/Password";
 import PhoneIcon from "@mui/icons-material/Phone";
 import HomeIcon from "@mui/icons-material/Home";
+import instance from "../../utils/api/instance";
+import useNotificationStore from "../../utils/store/useNotificationStore";
+import { useNavigate } from "react-router";
 
 const Register = () => {
+  const navigate = useNavigate();
   const methods = useForm({
     resolver: yupResolver(registerSchema),
   });
 
-  const onSubmit = (data) => {
+  const { showNotification } = useNotificationStore();
+
+  const onSubmit = async (data) => {
     const insertData = {
       ...data,
-      isAdmin: 1,
+      isAdmin: 0,
     };
-    console.log(insertData);
-    alert("Register Berhasil");
+
+    try {
+      const response = await instance.post("/auth/register", insertData);
+      const message = response.data?.message || "Register akun berhasil";
+      showNotification(message, "success");
+      setTimeout(() => {
+        navigate("/auth/login");
+      }, 1500);
+    } catch (error) {
+      showNotification(
+        error.response?.data?.message || "Register akun gagal",
+        "error"
+      );
+    }
   };
 
   return (
