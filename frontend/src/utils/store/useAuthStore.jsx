@@ -9,6 +9,23 @@ const authAxios = axios.create({
   baseURL: apiUrl,
 });
 
+// inject accessToken dari local storage ke authAxios agar tidak 401 saat load page yang manggil API dengan authentication
+const authStorage = localStorage.getItem("auth-storage");
+
+if (authStorage) {
+  try {
+    const parsedStorage = JSON.parse(authStorage);
+    const accessToken = parsedStorage?.state?.accessToken;
+    if (accessToken) {
+      authAxios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${accessToken}`;
+    }
+  } catch (error) {
+    console.error("Failed to parse auth storage:", error);
+  }
+}
+
 // Zustand store
 const useAuthStore = create(
   persist(
@@ -51,6 +68,9 @@ const useAuthStore = create(
 
       // GET PROFILE
       getProfile: async () => {
+        const { accessToken } = get();
+        if (!accessToken) return; // biar tidak ada unauthorized saat logout atau belum login
+
         try {
           const response = await authAxios.get("/auth/me");
           set({ user: response.data.payload });
