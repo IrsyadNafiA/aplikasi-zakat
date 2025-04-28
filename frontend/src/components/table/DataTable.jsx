@@ -6,10 +6,10 @@ import { useMediaQuery, useTheme } from "@mui/material";
 const DataTable = ({
   columns,
   rows,
+  getRowId,
   paginationModel = { page: 0, pageSize: 5 },
   height = 500,
   minWidth = 600,
-  showToolbar = true,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -20,19 +20,17 @@ const DataTable = ({
         <DataGrid
           rows={rows}
           columns={columns}
+          getRowId={getRowId}
           initialState={{ pagination: { paginationModel } }}
           pageSizeOptions={[5, 10]}
           disableRowSelectionOnClick
-          checkboxSelection
           sx={{
             border: 0,
             ".MuiDataGrid-virtualScroller": {
               overflowX: isMobile ? "auto" : "hidden",
             },
           }}
-          slots={{
-            toolbar: showToolbar ? undefined : null,
-          }}
+          showToolbar
         />
       </Paper>
     </Box>
