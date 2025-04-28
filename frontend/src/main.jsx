@@ -10,6 +10,7 @@ import "@fontsource/roboto/700.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./utils/theme.js";
 import LoadingPage from "./components/LoadingPage.jsx";
+import Notification from "./components/Notification.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -17,6 +18,8 @@ createRoot(document.getElementById("root")).render(
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <RouterProvider router={App} />
+        {/* NOTIFICATION */}
+        <Notification />
       </ThemeProvider>
     </Suspense>
   </StrictMode>

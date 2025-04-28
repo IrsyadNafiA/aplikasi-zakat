@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,12 +8,13 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import DashboardAppBar from "../../components/DashboardAppBar";
 import DashboardDrawer from "../../components/DashboardDrawer";
 import DashboardMain from "../../components/DashboardMain";
 import DrawerList from "../../components/DrawerList";
 import { useMediaQuery } from "@mui/material";
+import useAuthStore from "../../utils/store/useAuthStore";
 
 // const drawerWidth = 240;
 
@@ -30,6 +31,17 @@ const DashboardLayout = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md")); // <= detect mobile (md = 960px)
   const [open, setOpen] = useState(!isMobile); // default open di desktop, tertutup di mobile
   const location = window.location.pathname.split("/")[1].toLocaleUpperCase();
+  const navigate = useNavigate();
+
+  // cek is auth
+  const { accessToken } = useAuthStore();
+
+  // Cegah infinite loop dengan useEffect
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/auth/login");
+    }
+  }, [accessToken, navigate]); // Hanya sekali saat accessToken berubah
 
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);

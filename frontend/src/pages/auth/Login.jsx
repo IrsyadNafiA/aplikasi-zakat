@@ -5,16 +5,33 @@ import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../utils/schema/authSchema";
 import { RHFPasswordField, RHFTextField } from "../../components/FormControl";
+import useAuthStore from "../../utils/store/useAuthStore";
+import { useNavigate } from "react-router";
+import useNotificationStore from "../../utils/store/useNotificationStore";
 
 const Login = () => {
+  const navigate = useNavigate();
   const methods = useForm({
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    alert("Login Berhasil");
-    window.location.href = "/dashboard";
+  // USE STORE
+  const { login, error, loading } = useAuthStore();
+  const { showNotification } = useNotificationStore();
+
+  const onSubmit = async (data) => {
+    try {
+      await login(data.email, data.password);
+      if (!error) {
+        showNotification("Login Berhasil", "success");
+        navigate("/dashboard");
+      } else {
+        showNotification("Login Gagal", "error");
+      }
+    } catch (error) {
+      showNotification("Login Gagal", "error");
+      alert(error.response?.data?.message || "Login gagal");
+    }
   };
 
   return (
@@ -62,7 +79,7 @@ const Login = () => {
           {/* Password Section - End */}
 
           <Button variant="contained" color="primary" type="submit">
-            Masuk
+            {loading ? "Loading..." : "Login"}
           </Button>
           <Typography fontSize={12}>
             Belum punya akun? <Link href="/auth/register">Daftar di sini</Link>

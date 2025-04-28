@@ -11,8 +11,16 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import lists from "../utils/drawerLists";
 
+// icon
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
+import useAuthStore from "../utils/store/useAuthStore";
+import { useNavigate } from "react-router";
+
 const DrawerList = () => {
   const [openNested, setOpenNested] = useState(null);
+  const { logout } = useAuthStore();
+  const navigate = useNavigate();
 
   // Check if path is active
   const isActive = (path) => location.pathname.startsWith(path);
@@ -37,6 +45,11 @@ const DrawerList = () => {
   // Toggle nested header
   const handleToggle = (title) => {
     setOpenNested((prev) => (prev === title ? null : title));
+  };
+
+  const handleLogout = async () => {
+    navigate("/auth/login");
+    await logout();
   };
 
   return (
@@ -146,6 +159,58 @@ const DrawerList = () => {
           </ListItemButton>
         );
       })}
+      {/* Fix Menu :: Start*/}
+      <Divider sx={{ bgcolor: "white" }} />
+      <ListSubheader
+        component="div"
+        sx={{ bgcolor: "primary.main", color: "white" }}
+      >
+        User Menu
+      </ListSubheader>
+      {/* Profil Saya :: Start */}
+      <div>
+        <ListItemButton
+          selected={isActive("/profil-saya")}
+          href="/profil-saya"
+          sx={{
+            "&.Mui-selected": {
+              backgroundColor: "primary.light",
+              color: "white",
+              "& .MuiListItemIcon-root": {
+                color: "white",
+              },
+            },
+            "&:hover": {
+              backgroundColor: "primary.light",
+            },
+          }}
+        >
+          <ListItemIcon sx={{ color: "white" }}>
+            <AccountCircleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Profil Saya" />
+        </ListItemButton>
+      </div>
+      {/* Profil Saya :: End */}
+
+      {/* Logout :: Start */}
+      <div>
+        <ListItemButton
+          onClick={handleLogout}
+          sx={{
+            "&:hover": {
+              backgroundColor: "primary.light",
+            },
+          }}
+        >
+          <ListItemIcon sx={{ color: "white" }}>
+            <LogoutIcon />
+          </ListItemIcon>
+          <ListItemText primary="Log Out" />
+        </ListItemButton>
+      </div>
+      {/* Logout :: End */}
+      {/* Fix Menu :: End */}
     </List>
   );
 };

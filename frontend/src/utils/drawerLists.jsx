@@ -32,20 +32,20 @@ const lists = [
       },
     ],
   },
-  {
-    kind: "subHeader",
-    title: "User Menu",
-  },
-  {
-    link: "/profil-saya",
-    title: "Profil Saya",
-    icon: <AccountCircleIcon />,
-  },
-  {
-    link: "/auth/logout",
-    title: "Log Out",
-    icon: <LogoutIcon />,
-  },
+  // {
+  //   kind: "subHeader",
+  //   title: "User Menu",
+  // },
+  // {
+  //   link: "/profil-saya",
+  //   title: "Profil Saya",
+  //   icon: <AccountCircleIcon />,
+  // },
+  // {
+  //   link: "/auth/logout",
+  //   title: "Log Out",
+  //   icon: <LogoutIcon />,
+  // },
 ];
 
 export default lists;
