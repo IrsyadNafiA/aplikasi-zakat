@@ -14,7 +14,13 @@ import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import EachUtils from "../utils/eachUtils";
 
-const RHFTextField = ({ name, label, type = "text", ...props }) => {
+const RHFTextField = ({
+  name,
+  label,
+  type = "text",
+  variant = "standard",
+  ...props
+}) => {
   const {
     register,
     formState: { errors },
@@ -26,7 +32,7 @@ const RHFTextField = ({ name, label, type = "text", ...props }) => {
     <TextField
       id={name}
       fullWidth
-      variant="standard"
+      variant={variant}
       type={type}
       label={label}
       {...register(name)}
@@ -37,7 +43,7 @@ const RHFTextField = ({ name, label, type = "text", ...props }) => {
   );
 };
 
-const RHFPasswordField = ({ name, label, ...props }) => {
+const RHFPasswordField = ({ name, label, variant = "standard", ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
@@ -57,7 +63,7 @@ const RHFPasswordField = ({ name, label, ...props }) => {
   };
 
   return (
-    <FormControl sx={{ width: "100%" }} variant="standard" error={!!error}>
+    <FormControl sx={{ width: "100%" }} variant={variant} error={!!error}>
       <InputLabel htmlFor={label}>{label}</InputLabel>
       <Input
         id={label}
@@ -88,7 +94,14 @@ const RHFPasswordField = ({ name, label, ...props }) => {
   );
 };
 
-const RHFSelectField = ({ name, label, options, ...props }) => {
+const RHFSelectField = ({
+  name,
+  label,
+  variant = "standard",
+  options,
+  onChange: customOnChange,
+  ...props
+}) => {
   const {
     control,
     formState: { errors },
@@ -97,7 +110,7 @@ const RHFSelectField = ({ name, label, options, ...props }) => {
   const error = errors[name];
 
   return (
-    <FormControl variant="standard" fullWidth error={!!error}>
+    <FormControl variant={variant} fullWidth error={!!error}>
       <InputLabel id={`${name}-label`}>{label}</InputLabel>
 
       <Controller
@@ -110,6 +123,12 @@ const RHFSelectField = ({ name, label, options, ...props }) => {
             id={name}
             label={label}
             {...field}
+            onChange={(e) => {
+              field.onChange(e); // biar React Hook Form update value-nya
+              if (customOnChange) {
+                customOnChange(e.target.value); // biar kamu juga bisa pakai value-nya
+              }
+            }}
             {...props}
           >
             {options.map((item, index) => (
