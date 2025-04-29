@@ -43,7 +43,6 @@ model Remark {
   tanggal_dikonfirmasi DateTime?
   status               Status    @default(DIAJUKAN)
   isDeleted            Int?
-  createdAt            DateTime  @default(now())
 
   Zakat_uang    Zakat_uang[]
   Zakat_makanan Zakat_makanan[]
@@ -52,44 +51,40 @@ model Remark {
 }
 
 model Zakat_uang {
-  id        Int      @id @default(autoincrement())
-  remark    Remark   @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id        Int    @id @default(autoincrement())
+  remark    Remark @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   remark_id Int
   nama      String
   hubungan  String
   nisab     Float
   harga     BigInt
   jumlah    BigInt
-  createdAt DateTime @default(now())
 }
 
 model Zakat_makanan {
-  id              Int      @id @default(autoincrement())
+  id              Int    @id @default(autoincrement())
   remark_id       Int
-  remark          Remark   @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  remark          Remark @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   tipe            Tipe?
   jumlah_keluarga Int
   nisab           Float
   jumlah          Float
-  createdAt       DateTime @default(now())
 }
 
 model Fidyah {
-  id        Int      @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   remark_id Int
-  remark    Remark   @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  remark    Remark @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   nisab     Int
   harga     BigInt
   jumlah    BigInt
-  createdAt DateTime @default(now())
 }
 
 model Infaq {
-  id        Int      @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   remark_id Int
-  remark    Remark   @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  remark    Remark @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   jumlah    BigInt
-  createdAt DateTime @default(now())
 }
 
 // ENUM
