@@ -36,8 +36,8 @@ model Remark {
 
   muzaki_id            Int
   muzaki               User      @relation("MuzakiRelation", fields: [muzaki_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  pengurus_id          Int
-  pengurus             User      @relation("PengurusRelation", fields: [pengurus_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  pengurus_id          Int?
+  pengurus             User?     @relation("PengurusRelation", fields: [pengurus_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   tipe_zakat           TipeZakat
   tanggal_diajukan     DateTime
   tanggal_dikonfirmasi DateTime?

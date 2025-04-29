@@ -173,6 +173,7 @@ const updateRemarkStatus = async (req, res) => {
     if (!remark) return response(404, null, "Remark not found", res);
 
     const updateData = {
+      pengurus_id: parsed.pengurus_id,
       status: parsed.status,
       tanggal_dikonfirmasi: parsed.tanggal_dikonfirmasi,
     };
