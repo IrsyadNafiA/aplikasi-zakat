@@ -1,15 +1,17 @@
 import { Box, InputAdornment } from "@mui/material";
-import { useState } from "react";
+import { useEffect } from "react";
 import { RHFSelectField, RHFTextField } from "../FormControl";
+import { useFormContext, useWatch } from "react-hook-form";
 
 const ZakatMakanan = () => {
-  const [jmlNisab, setJmlNisab] = useState(2.5);
+  const { control, setValue } = useFormContext();
+  const jumlahKeluarga = useWatch({ control, name: "jumlah_keluarga" });
 
-  const changeJmlKeluarga = (e) => {
-    const jmlKeluarga = parseFloat(e.target.value);
-    const total = jmlKeluarga * 2.5;
-    setJmlNisab(total);
-  };
+  useEffect(() => {
+    const jml = parseFloat(jumlahKeluarga || 1);
+    const total = jml * 2.5;
+    setValue("jumlah", total);
+  }, [jumlahKeluarga, setValue]);
 
   return (
     <Box
@@ -47,7 +49,6 @@ const ZakatMakanan = () => {
           type="number"
           variant="outlined"
           defaultValue={1}
-          onChange={changeJmlKeluarga}
         />
         {/* Jumlah Keluarga Section - End */}
 
@@ -75,7 +76,6 @@ const ZakatMakanan = () => {
           name="jumlah"
           type="number"
           variant="outlined"
-          value={jmlNisab}
           slotProps={{
             input: {
               endAdornment: (

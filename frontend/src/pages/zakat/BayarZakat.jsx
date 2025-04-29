@@ -10,22 +10,60 @@ import DataTable from "../../components/table/DataTable";
 import { RHFSelectField, RHFTextField } from "../../components/FormControl";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ZakatMakanan from "../../components/form/ZakatMakanan";
 import ZakatUang from "../../components/form/ZakatUang";
+import { dateNow } from "../../utils/dateFormatter";
+import useAuthStore from "../../utils/store/useAuthStore";
+import { Fidyah, Infaq } from "../../components/form/FidyahInfaq";
 
 const BayarZakat = () => {
   const [typeForm, setTypeForm] = useState("");
-  const methods = useForm({
-    resolver: yupResolver(),
-  });
+  const methods = useForm();
+  const { user, getProfile } = useAuthStore();
+
+  useEffect(() => {
+    if (!user) {
+      getProfile();
+    }
+  }, [getProfile, user]);
 
   const changeTypeForm = (value) => {
     setTypeForm(value);
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+    const muzaki_id = user?.id;
+    const remarkData = {
+      tipe_zakat: data.tipe_zakat,
+      status: data.status,
+      tanggal_diajukan: dateNow(),
+    };
+
+    if (typeForm === "UANG") {
+      const insertData = {
+        muzaki_id,
+        remark: remarkData,
+        zakatData: {
+          zakatData: data.zakatData?.zakatList,
+        },
+      };
+      console.log(insertData);
+    }
+
+    if (typeForm === "MAKANAN") {
+      const insertData = {
+        muzaki_id,
+        remark: remarkData,
+        zakatData: {
+          tipe: data.tipe,
+          jumlah_keluarga: data.jumlah_keluarga,
+          nisab: data.nisab,
+          jumlah: data.jumlah,
+        },
+      };
+      console.log(insertData);
+    }
   };
 
   return (
@@ -62,7 +100,15 @@ const BayarZakat = () => {
           <Divider sx={{ marginY: 2 }} />
 
           {/* Zakat Form Section - Start */}
-          {typeForm === "UANG" && <ZakatUang />}
+          {typeForm === "UANG" && (
+            <>
+              <ZakatUang />
+              <Divider sx={{ marginY: 2 }} />
+              <Fidyah />
+              <Divider sx={{ marginY: 2 }} />
+              <Infaq />
+            </>
+          )}
           {typeForm === "MAKANAN" && <ZakatMakanan />}
           {/* Zakat Form Section - End */}
 

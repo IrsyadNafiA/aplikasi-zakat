@@ -1,41 +1,45 @@
 import { Box, Button, Grid, InputAdornment, Typography } from "@mui/material";
 import { RHFTextField } from "../FormControl";
-import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 const ZakatUang = () => {
-  const [pesertaList, setPesertaList] = useState([
-    { nama: "", hubungan: "", harga: 0, jumlah: 0 },
-  ]);
+  const { control, setValue } = useFormContext();
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "zakatData.zakatList",
+  });
 
   const handleInputChange = (index, field, value) => {
-    const newList = [...pesertaList];
-    newList[index][field] = value;
+    // Set nilai field (nama, hubungan, harga)
+    setValue(`zakatData.zakatList.${index}.${field}`, value);
 
-    // hitung jumlah kalau harga diubah
+    // Jika yang diubah adalah harga, update jumlah (harga * 2.5)
     if (field === "harga") {
       const harga = parseFloat(value) || 0;
-      newList[index][value] = harga * 2.5;
+      const jumlah = harga * 2.5;
+      setValue(`zakatData.zakatList.${index}.jumlah`, jumlah);
+      setValue(`zakatData.zakatList.${index}.nisab`, 2.5); // Set nisab default
     }
-
-    setPesertaList(newList);
   };
 
   const tambahData = () => {
-    setPesertaList([
-      ...pesertaList,
-      { nama: "", hubungan: "", harga: 0, jumlah: 0 },
-    ]);
-  };
-
-  const hapusData = (index) => {
-    const newList = pesertaList.filter((_, i) => i !== index);
-    setPesertaList(newList);
+    append({
+      nama: "",
+      hubungan: "",
+      harga: 0,
+      jumlah: 0,
+      nisab: 2.5,
+    });
   };
 
   return (
     <>
+      <Typography variant="h6" fontWeight={600} marginY={2}>
+        Zakat
+      </Typography>
       <Button
         variant="contained"
         color="info"
@@ -43,99 +47,82 @@ const ZakatUang = () => {
         startIcon={<AddIcon />}
         sx={{ mb: 2 }}
       >
-        Tambah Data
+        Tambah Data Keluarga
       </Button>
-      {pesertaList.map((peserta, index) => (
+
+      {fields.map((field, index) => (
         <Box
-          key={index}
+          key={field.id}
           sx={{
             width: "100%",
             display: "flex",
             flexDirection: "column",
             gap: 2,
+            mb: 2,
           }}
         >
-          {/* Header - Start */}
           <Box
             sx={{
-              width: "100%",
               display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
               justifyContent: "space-between",
-              gap: 2,
+              alignItems: "center",
             }}
           >
-            <Typography variant="h6" fontWeight={600}>
-              Data {index + 1}
+            <Typography variant="h6" fontWeight={400}>
+              Keluarga {index + 1}
             </Typography>
             <Button
-              aria-label="delete"
               variant="contained"
               color="error"
-              onClick={() => hapusData(index)}
+              onClick={() => remove(index)}
             >
               <HighlightOffIcon fontSize="small" />
             </Button>
           </Box>
-          {/* Header - End */}
 
           <Grid container spacing={2}>
-            {/* Nama Section - Start */}
             <Grid size={8}>
               <RHFTextField
                 label="Nama"
-                name={`nama-${index}`}
-                value={peserta.nama}
+                name={`zakatData.zakatList.${index}.nama`}
+                variant="outlined"
                 onChange={(e) =>
                   handleInputChange(index, "nama", e.target.value)
                 }
-                variant="outlined"
               />
             </Grid>
-            {/* Nama Section - End */}
-
-            {/* Hubungan Section - Start */}
             <Grid size={4}>
               <RHFTextField
                 label="Hubungan"
-                name={`hubungan-${index}`}
-                value={peserta.hubungan}
+                name={`zakatData.zakatList.${index}.hubungan`}
+                variant="outlined"
                 onChange={(e) =>
                   handleInputChange(index, "hubungan", e.target.value)
                 }
-                variant="outlined"
               />
             </Grid>
-            {/* Hubungan Section - End */}
-
-            {/* Nisab Section - Start */}
             <Grid size={4}>
               <RHFTextField
                 label="Nisab"
-                name={`nisab-${index}`}
-                type="number"
+                name={`zakatData.zakatList.${index}.nisab`}
                 variant="outlined"
+                type="number"
                 defaultValue={2.5}
                 slotProps={{
                   input: {
+                    readOnly: true,
                     endAdornment: (
                       <InputAdornment position="start">kg</InputAdornment>
                     ),
-                    readOnly: true,
                   },
                 }}
               />
             </Grid>
-            {/* Nisab Section - End */}
-
-            {/* Harga Section - Start */}
             <Grid size={4}>
               <RHFTextField
-                variant="outlined"
                 label="Harga"
-                name={`harga-${index}`}
-                value={peserta.harga}
+                name={`zakatData.zakatList.${index}.harga`}
+                variant="outlined"
                 type="number"
                 onChange={(e) =>
                   handleInputChange(index, "harga", e.target.value)
@@ -148,27 +135,22 @@ const ZakatUang = () => {
                   },
                 }}
               />
-              {/* Harga Section - End */}
             </Grid>
-
-            {/* Jumlah Section - Start */}
             <Grid size={4}>
               <RHFTextField
-                variant="outlined"
                 label="Jumlah"
-                name={`jumlah-${index}`}
-                value={peserta.jumlah}
+                name={`zakatData.zakatList.${index}.jumlah`}
+                variant="outlined"
                 slotProps={{
                   input: {
+                    readOnly: true,
                     startAdornment: (
                       <InputAdornment position="start">Rp.</InputAdornment>
                     ),
-                    readOnly: true,
                   },
                 }}
               />
             </Grid>
-            {/* Jumlah Section - End */}
           </Grid>
         </Box>
       ))}
