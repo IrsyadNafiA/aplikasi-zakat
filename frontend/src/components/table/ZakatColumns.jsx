@@ -1,3 +1,5 @@
+import { Button } from "@mui/material";
+
 const ZakatColumns = [
   {
     field: "no",
@@ -16,10 +18,30 @@ const ZakatColumns = [
   {
     field: "status",
     headerName: "Status",
-    description: "This column has a value getter and is not sortable.",
+    minWidth: 160,
+    flex: 2,
+  },
+  {
+    field: "action",
+    headerName: "Action",
+    description: "Aksi yang bisa dilakukan",
     sortable: false,
     minWidth: 160,
     flex: 2,
+    renderCell: (params) => (
+      <>
+        {params.row.status === "DIAJUKAN" && (
+          <Button
+            variant="contained"
+            color="warning"
+            size="small"
+            onClick={() => console.log(params.row.remark_id)}
+          >
+            Edit
+          </Button>
+        )}
+      </>
+    ),
   },
 ];
 

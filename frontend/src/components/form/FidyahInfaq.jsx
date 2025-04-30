@@ -1,7 +1,20 @@
 import { Box, Grid, InputAdornment, Typography } from "@mui/material";
 import { RHFTextField } from "../FormControl";
+import { useFormContext, useWatch } from "react-hook-form";
+import { useEffect } from "react";
 
 const Fidyah = () => {
+  const { control, setValue, getValues } = useFormContext();
+  const nisab = useWatch({ control, name: "fidyah.nisab" });
+
+  useEffect(() => {
+    const jmlNisab = parseInt(nisab || 0) + 3 - 3;
+    const harga = parseFloat(getValues("fidyah.harga") || 0);
+    const jumlah = jmlNisab * harga;
+
+    setValue("fidyah.jumlah", jumlah);
+  }, [getValues, nisab, setValue]);
+
   return (
     <Box
       sx={{
@@ -16,24 +29,6 @@ const Fidyah = () => {
         Fidyah/Kifarat
       </Typography>
       <Grid container spacing={2}>
-        {/* Nisab Section - Start */}
-        <Grid size={6}>
-          <RHFTextField
-            label="Nisab"
-            name="fidyah.nisab"
-            type="number"
-            variant="outlined"
-            defaultValue=""
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <InputAdornment position="start">hari</InputAdornment>
-                ),
-              },
-            }}
-          />
-        </Grid>
-        {/* Nisab Section - End */}
         {/* Harga Section - Start */}
         <Grid size={6}>
           <RHFTextField
@@ -41,7 +36,6 @@ const Fidyah = () => {
             name="fidyah.harga"
             type="number"
             variant="outlined"
-            defaultValue=""
             slotProps={{
               input: {
                 startAdornment: (
@@ -52,6 +46,23 @@ const Fidyah = () => {
           />
         </Grid>
         {/* Harga Section - End */}
+        {/* Nisab Section - Start */}
+        <Grid size={6}>
+          <RHFTextField
+            label="Nisab"
+            name="fidyah.nisab"
+            type="number"
+            variant="outlined"
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="start">hari</InputAdornment>
+                ),
+              },
+            }}
+          />
+        </Grid>
+        {/* Nisab Section - End */}
         {/* Jumlah Section - Start */}
         <Grid size={12}>
           <RHFTextField
@@ -59,7 +70,6 @@ const Fidyah = () => {
             name="fidyah.jumlah"
             type="number"
             variant="outlined"
-            defaultValue=""
             slotProps={{
               input: {
                 startAdornment: (
@@ -94,7 +104,7 @@ const Infaq = () => {
         name="infaq.jumlah"
         type="number"
         variant="outlined"
-        defaultValue=""
+        defaultValue={0}
         slotProps={{
           input: {
             startAdornment: (

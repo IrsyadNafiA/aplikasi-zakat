@@ -10,17 +10,32 @@ import DataTable from "../../components/table/DataTable";
 import { RHFSelectField, RHFTextField } from "../../components/FormControl";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ZakatMakanan from "../../components/form/ZakatMakanan";
 import ZakatUang from "../../components/form/ZakatUang";
 import { dateNow } from "../../utils/dateFormatter";
-import useAuthStore from "../../utils/store/useAuthStore";
+import useAuthStore, { authAxios } from "../../utils/store/useAuthStore";
 import { Fidyah, Infaq } from "../../components/form/FidyahInfaq";
+import {
+  zakatMakananSchema,
+  zakatUangSchema,
+} from "../../utils/schema/zakatSchema";
+import useNotificationStore from "../../utils/store/useNotificationStore";
+import { useNavigate } from "react-router";
 
 const BayarZakat = () => {
   const [typeForm, setTypeForm] = useState("");
-  const methods = useForm();
   const { user, getProfile } = useAuthStore();
+  const { showNotification } = useNotificationStore();
+  const navigate = useNavigate();
+
+  const schema = useMemo(() => {
+    return typeForm === "UANG" ? zakatUangSchema : zakatMakananSchema;
+  }, [typeForm]);
+
+  const methods = useForm({
+    resolver: yupResolver(schema),
+  });
 
   useEffect(() => {
     if (!user) {
@@ -32,7 +47,9 @@ const BayarZakat = () => {
     setTypeForm(value);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    console.log("Raw datas: ", data);
+
     const muzaki_id = user?.id;
     const remarkData = {
       tipe_zakat: data.tipe_zakat,
@@ -40,29 +57,42 @@ const BayarZakat = () => {
       tanggal_diajukan: dateNow(),
     };
 
+    let insertData = {
+      muzaki_id,
+      remark: remarkData,
+      zakatData: {},
+    };
+
     if (typeForm === "UANG") {
-      const insertData = {
-        muzaki_id,
-        remark: remarkData,
-        zakatData: {
-          zakatData: data.zakatData?.zakatList,
+      insertData.zakatData = {
+        zakatList: data.zakatData?.zakatList || [],
+        fidyah: {
+          harga: parseFloat(data.fidyah?.harga) || 0,
+          nisab: parseInt(data.fidyah?.nisab) || 0,
+          jumlah: data.fidyah?.jumlah || 0,
+        },
+        infaq: {
+          jumlah: parseFloat(data.infaq?.jumlah) || 0,
         },
       };
-      console.log(insertData);
     }
 
     if (typeForm === "MAKANAN") {
-      const insertData = {
-        muzaki_id,
-        remark: remarkData,
-        zakatData: {
-          tipe: data.tipe,
-          jumlah_keluarga: data.jumlah_keluarga,
-          nisab: data.nisab,
-          jumlah: data.jumlah,
-        },
+      insertData.zakatData = {
+        tipe: data.tipe,
+        jumlah_keluarga: parseFloat(data.jumlah_keluarga),
+        nisab: parseFloat(data.nisab),
+        jumlah: data.jumlah,
       };
-      console.log(insertData);
+    }
+
+    try {
+      const response = await authAxios.post("/zakat", insertData);
+      const message = response.data?.message || "Berhasil tambah data";
+      showNotification(message);
+      setTimeout(() => navigate("/zakat/zakat-saya"), 1500);
+    } catch (error) {
+      showNotification(error.response?.data?.message || "Gagal tambah data");
     }
   };
 
