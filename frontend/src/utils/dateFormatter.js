@@ -7,7 +7,18 @@ import { DateTime } from "luxon";
  * @returns {string} Contoh output: '2025-04-29T21:33:00.874+07:00'
  */
 export function dateNow() {
-  return DateTime.now().setZone("Asia/Jakarta").toString();
+  const jakartaTime = DateTime.now().setZone("Asia/Jakarta");
+  const formatted = jakartaTime.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  return formatted;
+}
+
+/**
+ * Format date now.
+ *
+ * @returns {string} Contoh output: '2025-04-29T21:33:00Z'
+ */
+export function dateNowISO() {
+  return DateTime.now().toUTC().toISO();
 }
 
 /**
