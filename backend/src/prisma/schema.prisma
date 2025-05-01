@@ -35,56 +35,61 @@ model Remark {
   id Int @id @default(autoincrement())
 
   muzaki_id            Int
-  muzaki               User      @relation("MuzakiRelation", fields: [muzaki_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   pengurus_id          Int?
-  pengurus             User?     @relation("PengurusRelation", fields: [pengurus_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   tipe_zakat           TipeZakat
   tanggal_diajukan     DateTime
   tanggal_dikonfirmasi DateTime?
   status               Status    @default(DIAJUKAN)
   isDeleted            Int?
 
-  Zakat_uang    Zakat_uang[]
-  Zakat_makanan Zakat_makanan[]
-  Fidyah        Fidyah[]
-  Infaq         Infaq[]
+  muzaki   User  @relation("MuzakiRelation", fields: [muzaki_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  pengurus User? @relation("PengurusRelation", fields: [pengurus_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  Zakat_uang    Zakat_uang[]   @relation("RemarkToZakatUang")
+  Zakat_makanan Zakat_makanan? @relation("RemarkToZakatMakanan")
+  Fidyah        Fidyah?        @relation("RemarkToFidyah")
+  Infaq         Infaq?         @relation("RemarkToInfaq")
 }
 
 model Zakat_uang {
   id        Int    @id @default(autoincrement())
-  remark    Remark @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   remark_id Int
   nama      String
   hubungan  String
   nisab     Float
-  harga     BigInt
-  jumlah    BigInt
+  harga     Float
+  jumlah    Float
+
+  remark Remark @relation("RemarkToZakatUang", fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Zakat_makanan {
-  id              Int    @id @default(autoincrement())
-  remark_id       Int
-  remark          Remark @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id              Int   @id @default(autoincrement())
+  remark_id       Int   @unique
   tipe            Tipe?
   jumlah_keluarga Int
   nisab           Float
   jumlah          Float
+
+  remark Remark @relation("RemarkToZakatMakanan", fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Fidyah {
-  id        Int    @id @default(autoincrement())
-  remark_id Int
-  remark    Remark @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id        Int   @id @default(autoincrement())
+  remark_id Int   @unique
   nisab     Int
-  harga     BigInt
-  jumlah    BigInt
+  harga     Float
+  jumlah    Float
+
+  remark Remark @relation("RemarkToFidyah", fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Infaq {
-  id        Int    @id @default(autoincrement())
-  remark_id Int
-  remark    Remark @relation(fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  jumlah    BigInt
+  id        Int   @id @default(autoincrement())
+  remark_id Int   @unique
+  jumlah    Float
+
+  remark Remark @relation("RemarkToInfaq", fields: [remark_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 // ENUM

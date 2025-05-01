@@ -1,9 +1,10 @@
 import prisma from "../config/prisma.js";
 import {
+  getAllData,
+  getRemarkById,
   getRemarks,
-  getRemarksById,
+  getRemarksByUserId,
 } from "../repositories/zakat.repository.js";
-import { generateKeluargaCode } from "../utils/generate.js";
 import { isObjectEmpty } from "../utils/isObjectEmpty.js";
 import response from "../utils/response.js";
 import {
@@ -238,8 +239,18 @@ const getAllRemarks = async (req, res) => {
 const getMyRemarks = async (req, res) => {
   try {
     const { id } = req.user;
-    const remarks = await getRemarksById(id);
+    const remarks = await getRemarksByUserId(id);
     return response(200, remarks, "Data fetched successfully", res);
+  } catch (error) {
+    return response(500, null, error.message, res);
+  }
+};
+
+const getZakatByRemarkId = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const remark = await getAllData(id);
+    return response(200, remark, "Data fetched successfully", res);
   } catch (error) {
     return response(500, null, error.message, res);
   }
@@ -253,4 +264,5 @@ export {
   deleteRemark,
   getAllRemarks,
   getMyRemarks,
+  getZakatByRemarkId,
 };
