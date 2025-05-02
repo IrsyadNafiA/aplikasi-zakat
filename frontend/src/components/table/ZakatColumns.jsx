@@ -1,4 +1,5 @@
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
+import ActionButton from "./ActionButton";
 
 const ZakatColumns = [
   {
@@ -31,14 +32,21 @@ const ZakatColumns = [
     renderCell: (params) => (
       <>
         {params.row.status === "DIAJUKAN" && (
-          <Button
-            variant="contained"
-            color="warning"
-            size="small"
-            onClick={() => console.log(params.row.remark_id)}
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyItems: "center",
+              alignItems: "center",
+            }}
           >
-            Edit
-          </Button>
+            <ActionButton
+              label="lihat"
+              color="info"
+              href={`/zakat/lihat-zakat/${params.row.remark_id}`}
+            />
+          </Box>
         )}
       </>
     ),

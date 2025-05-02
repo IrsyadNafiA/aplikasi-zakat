@@ -17,6 +17,7 @@ import BayarZakat from "./pages/zakat/BayarZakat.jsx";
 import ListZakat from "./pages/zakat/ListZakat.jsx";
 import ZakatSaya from "./pages/zakat/ZakatSaya.jsx";
 import ProfilSaya from "./pages/profilSaya/ProfilSaya.jsx";
+import LihatZakat from "./pages/zakat/LihatZakat.jsx";
 
 const App = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ const App = createBrowserRouter([
       {
         path: "list-zakat",
         Component: ListZakat,
+      },
+      {
+        path: "lihat-zakat/:id",
+        Component: LihatZakat,
       },
     ],
   },
