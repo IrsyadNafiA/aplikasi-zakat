@@ -15,7 +15,6 @@ import isAdmin from "../middlewares/isAdmin.js";
 const routes = Router();
 
 // Zakat
-routes.get("/api/zakat/:id", getZakatByRemarkId);
 routes.post("/api/zakat", auth, createZakat);
 routes.put("/api/zakat", auth, updateZakat);
 routes.delete("/api/zakat", auth, deleteZakat);
@@ -25,5 +24,8 @@ routes.get("/api/zakat/remarks", auth, isAdmin, getAllRemarks);
 routes.get("/api/zakat/my-remarks", auth, getMyRemarks);
 routes.put("/api/zakat/remark", auth, updateRemarkStatus);
 routes.delete("/api/zakat/remark", auth, deleteRemark);
+
+// Route dinamis
+routes.get("/api/zakat/:id", auth, getZakatByRemarkId);
 
 export default routes;

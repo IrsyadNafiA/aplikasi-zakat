@@ -250,6 +250,12 @@ const getZakatByRemarkId = async (req, res) => {
   try {
     const id = req.params.id;
     const remark = await getAllData(id);
+
+    if (!remark) return response(404, null, "Zakat tidak ditemukan", res);
+
+    if (remark.muzaki_id !== req.user.id && !req.user.isAdmin)
+      return response(403, null, "Akses ditolak!", res);
+
     return response(200, remark, "Data fetched successfully", res);
   } catch (error) {
     return response(500, null, error.message, res);
