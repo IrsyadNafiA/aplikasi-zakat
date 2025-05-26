@@ -166,7 +166,6 @@ const DrawerList = () => {
                   ))}
                 </List>
               </Collapse>
-              <Divider sx={{ bgcolor: "white" }} />
             </div>
           );
         }

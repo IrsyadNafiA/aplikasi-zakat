@@ -33,6 +33,11 @@ const lists = [
     ],
   },
   {
+    link: "/data-keluarga",
+    title: "Data Keluarga",
+    icon: <AccountCircleIcon />,
+  },
+  {
     kind: "subHeader",
     title: "User Menu",
     isAdmin: 1,

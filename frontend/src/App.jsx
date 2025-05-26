@@ -18,6 +18,8 @@ import ListZakat from "./pages/zakat/ListZakat.jsx";
 import ZakatSaya from "./pages/zakat/ZakatSaya.jsx";
 import ProfilSaya from "./pages/profilSaya/ProfilSaya.jsx";
 import LihatZakat from "./pages/zakat/LihatZakat.jsx";
+import DataKeluarga from "./pages/dataKeluarga/DataKeluarga.jsx";
+import ActionKeluarga from "./pages/dataKeluarga/ActionKeluarga.jsx";
 
 const App = createBrowserRouter([
   {
@@ -71,6 +73,20 @@ const App = createBrowserRouter([
       {
         path: "lihat-zakat/:id",
         Component: LihatZakat,
+      },
+    ],
+  },
+  {
+    path: "data-keluarga",
+    Component: DashboardLayout,
+    children: [
+      {
+        path: "",
+        Component: DataKeluarga,
+      },
+      {
+        path: ":type",
+        Component: ActionKeluarga,
       },
     ],
   },
